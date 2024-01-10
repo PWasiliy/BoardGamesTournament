@@ -97,8 +97,18 @@ namespace BoardGamesTournament.UI
 		static readonly Lazy<Commands> _instance = new Lazy<Commands>(() => new Commands());
 		readonly Dictionary<string, Tournament> _tournaments = new();
 		readonly Dictionary<string, Command> _commands = new();
-		Commands() 
+		Commands()
 		{
+			_commands.Add("games", new Command("список настольных игр"));
+			_commands["games"].AddAction(0, (string[] args) =>
+			{
+				Console.WriteLine($"Настольные игры{(AllBoardgames.Instance.Count == 0 ? "не загружены" : ':')}");
+				for (var i = 0; i < AllBoardgames.Instance.Count; i++)
+					Console.WriteLine("  {0}. {1}", i + 1, AllBoardgames.Instance[i]);
+
+				Console.WriteLine();
+			});
+
 			bool ValidateTournamentName(string line)
 			{
 				bool result = !_tournaments.ContainsKey(line);
@@ -335,11 +345,6 @@ namespace BoardGamesTournament.UI
 						break;
 				}
 			}
-
-			Console.WriteLine();
-			Console.WriteLine($"Настольные игры{(AllBoardgames.Instance.Count == 0 ? "не загружены" : ':')}");
-			for (var i = 0; i < AllBoardgames.Instance.Count; i++)
-				Console.WriteLine("  {0}. {1}", i + 1, AllBoardgames.Instance[i]);
 
 			Console.WriteLine();
 		}
