@@ -1,0 +1,3 @@
+[submodule "submodules/Tesera"]
+	path = submodules/Tesera
+	url = https://github.com/PWasiliy/Tesera
