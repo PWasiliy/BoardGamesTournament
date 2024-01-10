@@ -109,6 +109,18 @@ namespace BoardGamesTournament.UI
 				Console.WriteLine();
 			});
 
+			_commands.Add("load", new Command("загрузить список настольных игр с Tesera.ru"));
+			_commands["load"].AddAction(1, (string[] args) =>
+			{
+				if (int.TryParse(args[0], out int collectionId))
+				{
+					Console.WriteLine($"Загружаются настольные игры из списка с ID {collectionId}...");
+					Console.WriteLine($"Количество загруженных игр: {AllBoardgames.Instance.Load(collectionId)}\n");
+				}
+				else
+					Commands.WriteError($"Значение \"{args[0]}\" не является валидным идентификатором списка\n");
+			});
+
 			bool ValidateTournamentName(string line)
 			{
 				bool result = !_tournaments.ContainsKey(line);

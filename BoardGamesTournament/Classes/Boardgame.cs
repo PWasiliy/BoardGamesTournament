@@ -35,7 +35,7 @@ namespace BoardGamesTournament.Classes
 		static readonly Lazy<AllBoardgames> _lazyInstance = new(() => new AllBoardgames());
 		
 		public static AllBoardgames Instance { get { return _lazyInstance.Value; } }
-		public void Load(int collectionId)
+		public int Load(int collectionId)
 		{
 			using HttpClient httpClient = new();
 			Tesera.TeseraClient teseraClient = new(httpClient);
@@ -43,6 +43,7 @@ namespace BoardGamesTournament.Classes
 			var collectionGames = teseraClient.Get<IEnumerable<CustomCollectionGameInfo>>(new Tesera.API.Collections.Custom.GamesClear(collectionId, Tesera.Types.Enums.GamesType.SelfGame))
 				?? throw new NullReferenceException($"Не удалось получить список игр из коллекции с ID {collectionId}");
 
+			int prevCount = _boardgames.Count;
 			foreach (var item in collectionGames)
 			{
 				string gameName = string.IsNullOrEmpty(item.Game.Title) ? $"c ID {item.Game.Id}" : item.Game.Title;
@@ -58,6 +59,7 @@ namespace BoardGamesTournament.Classes
 					MaxPlayersCount = (byte)(game.PlayersMaxRecommend <= 1 ? game.PlayersMax : game.PlayersMaxRecommend)
 				});
 			}
+			return _boardgames.Count - prevCount;
 
 		}
 		public int Count { get { return _boardgames.Count; } }
